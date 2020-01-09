@@ -1,0 +1,16 @@
+{
+  "name": "use-drawer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "father-build --esm --cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "father-build": "^1.17.1",
+    "lerna": "^3.19.0"
+  }
+}

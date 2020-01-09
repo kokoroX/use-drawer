@@ -1,0 +1,31 @@
+{
+  "name": "taro-use-drawer",
+  "version": "0.0.1",
+  "description": "",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "father-build --esm --cjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tarojs/taro": "^2.0.0",
+    "@types/lodash": "^4.14.149",
+    "@use-dura/core": "^0.0.1-alpha.2",
+    "@use-dura/immer": "^0.0.1-alpha.2",
+    "babel-plugin-module-resolver": "^4.0.0",
+    "lodash": "^4.17.15",
+    "react": "^16.12.0",
+    "use-drawer": "^0.0.1"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.7.7",
+    "@types/react": "^16.9.17",
+    "@use-dura/types": "^0.0.1-alpha.2",
+    "antd": "^3.26.6",
+    "father-build": "^1.17.1"
+  }
+}
