@@ -1,5 +1,5 @@
 export default {
-  // runtimeHelpers: true,
+  runtimeHelpers: true,
   pkgs: [
     'core',
     'taro'

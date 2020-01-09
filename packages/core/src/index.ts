@@ -1,4 +1,4 @@
-import { noop } from 'lodash';
+import { isNumber, noop } from 'lodash';
 import { useCallback, useMemo } from 'react';
 
 import useDuraOrigin from '@use-dura/core';
@@ -162,20 +162,19 @@ const model = {
       state.list = list;
     },
   }),
-  effects: ({ dispatch, localActionCenter, getState }) => ({
+  effects: ({ dispatch, actionCenter, getState }) => ({
     async search({ pagination, searchParams, api }) {
-      dispatch(localActionCenter.startLoading());
+      dispatch(actionCenter.startLoading());
       const { list, total } = await api(pagination, searchParams);
-      dispatch(localActionCenter.endLoading());
-      dispatch(localActionCenter.setData({ list, total }));
+      dispatch(actionCenter.endLoading());
+      dispatch(actionCenter.setData({ list, total }));
     },
     async searchByParamsAndPage({ params, pagination: searchPagination, api }) {
       const { pagination: originPagination } = getState();
-      const page = searchPagination.page || originPagination.page;
       const pagination = { ...originPagination, ...searchPagination };
-      dispatch(localActionCenter.setPage(page));
-      dispatch(localActionCenter.search({ pagination, params, api }));
-      dispatch(localActionCenter.setParams(params));
+      dispatch(actionCenter.setPagination(pagination));
+      dispatch(actionCenter.search({ pagination, params, api }));
+      dispatch(actionCenter.setParams(params));
     }
   }),
 };
@@ -188,7 +187,12 @@ function useDrawer<T extends UseDrawerApi>(api: T): [DrawerState, Toolkit<T>, an
   const [state, dispatch, actionCenter] = useDura(model);
   const { params, pagination } = state;
 
-  const commonSearch = useCallback(({ searchParams = {}, page, pageSize } = {}) => dispatch(actionCenter.searchByParamsAndPage({ params: searchParams, pagination: { ...pagination, page, pageSize }, api })), [params, pagination, api]);
+  const commonSearch = useCallback(({ searchParams = {}, page, pageSize } = {}) => {
+    const finalPagination: any = {};
+    if (isNumber(page)) finalPagination.page = page;
+    if (isNumber(pageSize)) finalPagination.pageSize = pageSize;
+    return dispatch(actionCenter.searchByParamsAndPage({ params: searchParams, pagination: finalPagination, api }));
+  }, [params, pagination, api]);
   
   const search = useCallback((searchParams: any) => commonSearch({ searchParams }), [commonSearch]);
   const refresh = useCallback(() => commonSearch(), [commonSearch]);
