@@ -29,5 +29,9 @@
     "@use-dura/types": "^0.0.1-alpha.2",
     "antd": "^3.26.6",
     "father-build": "^1.17.1"
-  }
+  },
+  "publishConfig": {
+    "registry": "https://nexus.billbear.cn/repository/npm/"
+  },
+  "gitHead": "cb8e0f97b2cda84be5dea79fa294e7945665ad3b"
 }

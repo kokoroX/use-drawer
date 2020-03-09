@@ -1,5 +1,5 @@
 {
-  "name": "use-drawer",
+  "name": "use-drawer-transformers",
   "version": "0.0.2",
   "description": "",
   "main": "dist/index.js",
@@ -12,19 +12,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.7.7",
     "@types/lodash": "^4.14.149",
-    "@use-dura/core": "^0.0.1-alpha.2",
-    "@use-dura/immer": "^0.0.1-alpha.2",
-    "lodash": "^4.17.15",
-    "react": "^16.12.0"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
-    "@use-dura/core": "^0.0.1-alpha.2",
-    "@use-dura/immer": "^0.0.1-alpha.2",
-    "@use-dura/types": "^0.0.1-alpha.2",
     "antd": "^3.26.6",
     "father-build": "^1.17.1"
-  },
-  "gitHead": "cb8e0f97b2cda84be5dea79fa294e7945665ad3b"
+  }
 }
