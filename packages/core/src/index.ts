@@ -201,7 +201,7 @@ function useDrawer<T extends UseDrawerApi>(api: T, onError?: any): [DrawerState,
   const { state, dispatch, actionCreator } = useDura(model, onError);
   const { params, pagination } = state;
 
-  const commonSearch = useCallback(({ searchParams, page, pageSize } = {}) => {
+  const commonSearch = useCallback(({ searchParams = null, page = 1, pageSize = 20 } = {}) => {
     const finalPagination: any = {};
     if (isNumber(page)) finalPagination.page = page;
     if (isNumber(pageSize)) finalPagination.pageSize = pageSize;
