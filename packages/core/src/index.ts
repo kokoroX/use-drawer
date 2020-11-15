@@ -29,7 +29,7 @@ const initialState: DrawerState = {
   params: {},
   pagination: {
     page: 1,
-    pageSize: 10,
+    pageSize: 20,
   },
 };
 
@@ -85,7 +85,7 @@ type Toolkit<T extends UseDrawerApi, I extends any = any> = {
 };
 
 /**
- * 
+ *
  * @param value useDrawer 返回的数据
  * @param helper useDrawer 返回的工具
  */
@@ -93,8 +93,13 @@ export function usePagination<D extends DrawerState, T extends Toolkit<any>>(val
   const getPagination = (value: D, helper: T, options: any) => ({
     showQuickJumper: true,
     showSizeChanger: true,
-    onChange: helper.jumpPage,
-    onShowSizeChange: (page: number, pageSize: number) => helper.changePageSize(pageSize),
+    onChange: (current, size) => {
+      if (size && size !== value.pagination.pageSize) {
+        helper.changePageSize(size);
+      } else {
+        helper.jumpPage(current);
+      }
+    },
     total: value.total,
     pageSize: value.pagination.pageSize,
     current: value.pagination.page,
@@ -104,7 +109,7 @@ export function usePagination<D extends DrawerState, T extends Toolkit<any>>(val
 }
 
 const model = {
-  state: initialState,
+  state: () => initialState,
   reducers: () => ({
     /**
      * 初始化加载中状态
@@ -144,6 +149,12 @@ const model = {
       state.pagination.page = page;
     },
     /**
+     * 设置每页条数
+     */
+    setPageSize: (state: DrawerState, pageSize: number) => {
+      state.pagination.pageSize = pageSize;
+    },
+    /**
      * 清除查询条件
      */
     clearParams: (state: DrawerState) => {
@@ -162,54 +173,62 @@ const model = {
       state.list = list;
     },
   }),
-  effects: ({ dispatch, actionCenter, getState }) => ({
-    async search({ pagination, searchParams, api }) {
-      dispatch(actionCenter.startLoading());
-      const { list, total } = await api(pagination, searchParams);
-      dispatch(actionCenter.endLoading());
-      dispatch(actionCenter.setData({ list, total }));
+  effects: ({ dispatch, actionCreator, getState }) => ({
+    async search({ pagination, params, api }) {
+      dispatch(actionCreator.startLoading());
+      try {
+        const { list, total } = await api(pagination, params);
+        dispatch(actionCreator.setData({ list, total }));
+      } finally {
+        dispatch(actionCreator.endLoading());
+      }
     },
     async searchByParamsAndPage({ params, pagination: searchPagination, api }) {
       const { pagination: originPagination } = getState();
       const pagination = { ...originPagination, ...searchPagination };
-      dispatch(actionCenter.setPagination(pagination));
-      dispatch(actionCenter.search({ pagination, params, api }));
-      dispatch(actionCenter.setParams(params));
+      dispatch(actionCreator.setPagination(pagination));
+      await dispatch(actionCreator.search({ pagination, params, api }));
+      dispatch(actionCreator.setParams(params));
     }
   }),
 };
 
 function useDura<M extends Model>(model: M, onError?: any) {
-  return useDuraOrigin(model, { plugins: [createImmerPlugin()], onError: onError || noop });
+  return useDuraOrigin(model, { plugins: [createImmerPlugin()], onError: onError });
 }
 
-function useDrawer<T extends UseDrawerApi>(api: T): [DrawerState, Toolkit<T>, any?] {
-  const [state, dispatch, actionCenter] = useDura(model);
+function useDrawer<T extends UseDrawerApi>(api: T, onError?: any): [DrawerState, Toolkit<T>, any?] {
+  const { state, dispatch, actionCreator } = useDura(model, onError);
   const { params, pagination } = state;
 
-  const commonSearch = useCallback(({ searchParams = {}, page, pageSize } = {}) => {
+  const commonSearch = useCallback(({ searchParams, page, pageSize } = {}) => {
     const finalPagination: any = {};
     if (isNumber(page)) finalPagination.page = page;
     if (isNumber(pageSize)) finalPagination.pageSize = pageSize;
-    return dispatch(actionCenter.searchByParamsAndPage({ params: searchParams, pagination: finalPagination, api }));
+    const finalParams = searchParams ? searchParams : params;
+    return dispatch(actionCreator.searchByParamsAndPage({ params: finalParams, pagination: finalPagination, api }));
   }, [params, pagination, api]);
-  
+
   const search = useCallback((searchParams: any) => commonSearch({ searchParams }), [commonSearch]);
   const refresh = useCallback(() => commonSearch(), [commonSearch]);
   const jumpPage = useCallback((page: number) => commonSearch({ page }), [commonSearch]);
   const changePageSize = useCallback((pageSize: number) => commonSearch({ pageSize }), [commonSearch]);
   const clearParams = useCallback(() => commonSearch({ searchParams: {} }), [commonSearch]);
   const loadMore = useCallback(() => commonSearch({ page: pagination.page++ }), [pagination.page]);
-  const clearList = () => dispatch(actionCenter.clearList());
-  const setList = (list: any[]) => dispatch(actionCenter.setList(list));
+  const clearList = () => dispatch(actionCreator.clearList());
+  const setList = (list: any[]) => dispatch(actionCreator.setList(list));
 
-  const toolkit = {
+  const toolkit = useMemo(() => ({
     search, refresh, jumpPage,
     changePageSize, clearParams,
     loadMore, clearList, setList,
-  };
+  }), [
+    search, refresh, jumpPage,
+    changePageSize, clearParams,
+    loadMore, clearList, setList,
+  ]);
 
-  return [state, toolkit];
+  return [state, toolkit as any];
 }
 
 export default useDrawer;
