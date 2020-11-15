@@ -1177,35 +1177,27 @@
     "@types/node" "*"
 
 "@use-dura/core@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@use-dura/core/-/core-2.1.0.tgz#2a8eba0eec89b659cbff9e22616fb28b29be7fde"
-  integrity sha512-ekEZHGSSMcxKqnI+usQcts6r98tWOWDxuEsr3lEXwKHbJCeyxFVMdx42eB4rEcRpgWMPYeLUXqrotpDQdPzyVg==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@use-dura/core/-/core-2.1.1.tgz#6b3015dbdeb749889b08a92d2c81ee3aec91dea1"
+  integrity sha512-UnHxnxtIscR1azWSz9t3AUr/Yg8I4hf8RG95CMfteqOiBqbuh8kL3jdeP1rT6okSXZB8wgKm05MZe6oEc4XWgw==
   dependencies:
     "@use-dura/types" "^2.1.0"
     lodash "^4.17.15"
     react "^16.12.0"
 
-"@use-dura/immer@^0.0.1-alpha.2":
-  version "0.0.1-alpha.2"
-  resolved "https://registry.yarnpkg.com/@use-dura/immer/-/immer-0.0.1-alpha.2.tgz#3143f3b44e6bef2b87aa467f3deb4906b36907e2"
-  integrity sha512-boreuFwgjzYneMjrKtsn7DQXukvBJLj12ZquE5ouNQ0dGYi0WbfwZUAM4JQFSR+x/dTwQ3R19d/5Y0/S53Is2Q==
+"@use-dura/immer@^2.1.0":
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@use-dura/immer/-/immer-2.1.1.tgz#79e1f3e74381085099492b734834c3fa7f168dbb"
+  integrity sha512-CqUt9ds+x2OOKiTOz+HubHjRJRqWCzgQYKNjLLbJMWLCG5JNsEn2ZdIPX/rYuJPh/0y0+PLtfgP5ba24/VaPxA==
   dependencies:
-    "@babel/runtime" "^7.7.7"
-    "@use-dura/types" "^0.0.1-alpha.2"
+    "@use-dura/types" "^2.1.0"
     immer "^5.1.0"
     lodash "^4.17.15"
 
-"@use-dura/types@^0.0.1-alpha.2":
-  version "0.0.1-alpha.2"
-  resolved "https://registry.yarnpkg.com/@use-dura/types/-/types-0.0.1-alpha.2.tgz#2f554cb2e6f3964015dcec01b8e7e1043a8eae36"
-  integrity sha512-4evhr6JqoA1T4+xidiMEqNYGXpEo5kT+bsp2Cg6mUhNm0aR2cBi35sakkAj4UZsOsVR3yqa1XDQ4BuG2vgaUNQ==
-  dependencies:
-    "@babel/runtime" "^7.7.7"
-
 "@use-dura/types@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@use-dura/types/-/types-2.1.0.tgz#71f850928f72d3bd8e5e589e32c327d1acf26238"
-  integrity sha512-ROC07dLDqNXm27yIUNvCT26Wa9nEc3QUEkvJ9ej0FNXBI46Q81FExFHf8lfemrPmMEuC2hcVcHGPOemKcECV/w==
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/@use-dura/types/-/types-2.1.1.tgz#25f8112ad891fab844f45d86c3f21da8132d5703"
+  integrity sha512-jyp2B8s+ET7WxlbR1bmFnQ34gqolJautpeXgpeZ3Tu3lGpqVHRqvu4peN7lWh389R7hV+gPcGq3L9ElChhSiuw==
 
 accord@^0.29.0:
   version "0.29.0"
