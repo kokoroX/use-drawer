@@ -1,6 +1,6 @@
 {
   "name": "use-drawer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -16,12 +16,14 @@
     "@types/lodash": "^4.14.149",
     "@use-dura/core": "^2.1.0",
     "@use-dura/immer": "^2.1.0",
-    "lodash": "^4.17.15",
-    "react": "^16.12.0"
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@use-dura/types": "^2.1.0",
     "father-build": "^1.17.1"
+  },
+  "peerDependencies": {
+    "react": "^16.12.0"
   },
   "gitHead": "ea17a01b6ed7312008db1921428002dd16236ae7"
 }
