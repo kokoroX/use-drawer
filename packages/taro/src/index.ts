@@ -1,8 +1,8 @@
 import { isNumber, noop } from 'lodash';
-import { useCallback, useMemo } from 'react';
 
-import useDuraOrigin from '@use-dura/core';
+import { useCallback, useMemo } from '@tarojs/taro';
 import { createImmerPlugin } from '@use-dura/immer';
+import useDuraOrigin from '@use-dura/taro';
 import { Model } from '@use-dura/types';
 
 /**
@@ -104,7 +104,7 @@ export function usePagination<D extends DrawerState, T extends Toolkit<any>>(val
 }
 
 const model = {
-  state: initialState,
+  state: () => initialState,
   reducers: () => ({
     /**
      * 初始化加载中状态
@@ -162,19 +162,19 @@ const model = {
       state.list = list;
     },
   }),
-  effects: ({ dispatch, actionCenter, getState }) => ({
-    async search({ pagination, searchParams, api }) {
-      dispatch(actionCenter.startLoading());
-      const { list, total } = await api(pagination, searchParams);
-      dispatch(actionCenter.endLoading());
-      dispatch(actionCenter.setData({ list, total }));
+  effects: ({ dispatch, actionCreator, getState }) => ({
+    async search({ pagination, params, api }) {
+      dispatch(actionCreator.startLoading());
+      const { list, total } = await api(pagination, params);
+      dispatch(actionCreator.endLoading());
+      dispatch(actionCreator.setData({ list, total }));
     },
     async searchByParamsAndPage({ params, pagination: searchPagination, api }) {
       const { pagination: originPagination } = getState();
       const pagination = { ...originPagination, ...searchPagination };
-      dispatch(actionCenter.setPagination(pagination));
-      dispatch(actionCenter.search({ pagination, params, api }));
-      dispatch(actionCenter.setParams(params));
+      dispatch(actionCreator.setPagination(pagination));
+      dispatch(actionCreator.search({ pagination, params, api }));
+      dispatch(actionCreator.setParams(params));
     }
   }),
 };
@@ -184,14 +184,14 @@ function useDura<M extends Model>(model: M, onError?: any) {
 }
 
 function useDrawer<T extends UseDrawerApi>(api: T): [DrawerState, Toolkit<T>, any?] {
-  const [state, dispatch, actionCenter] = useDura(model);
+  const { state, dispatch, actionCreator } = useDura(model);
   const { params, pagination } = state;
 
   const commonSearch = useCallback(({ searchParams = {}, page, pageSize } = {}) => {
     const finalPagination: any = {};
-    if (isNumber(page)) finalPagination.page = page;
-    if (isNumber(pageSize)) finalPagination.pageSize = pageSize;
-    return dispatch(actionCenter.searchByParamsAndPage({ params: searchParams, pagination: finalPagination, api }));
+    finalPagination.page = isNumber(page) ? page : pagination.page;
+    finalPagination.pageSize = isNumber(pageSize) ? pageSize : pagination.pageSize;
+    return dispatch(actionCreator.searchByParamsAndPage({ params: searchParams, pagination: finalPagination, api }));
   }, [params, pagination, api]);
 
   const search = useCallback((searchParams: any) => commonSearch({ searchParams }), [commonSearch]);
@@ -200,8 +200,8 @@ function useDrawer<T extends UseDrawerApi>(api: T): [DrawerState, Toolkit<T>, an
   const changePageSize = useCallback((pageSize: number) => commonSearch({ pageSize }), [commonSearch]);
   const clearParams = useCallback(() => commonSearch({ searchParams: {} }), [commonSearch]);
   const loadMore = useCallback(() => commonSearch({ page: pagination.page++ }), [pagination.page]);
-  const clearList = () => dispatch(actionCenter.clearList());
-  const setList = (list: any[]) => dispatch(actionCenter.setList(list));
+  const clearList = () => dispatch(actionCreator.clearList());
+  const setList = (list: any[]) => dispatch(actionCreator.setList(list));
 
   const toolkit = {
     search, refresh, jumpPage,

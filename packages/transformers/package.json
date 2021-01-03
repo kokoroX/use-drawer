@@ -18,5 +18,6 @@
   "devDependencies": {
     "antd": "^3.26.6",
     "father-build": "^1.17.1"
-  }
+  },
+  "gitHead": "ea17a01b6ed7312008db1921428002dd16236ae7"
 }
